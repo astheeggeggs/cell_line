@@ -33,7 +33,7 @@ PRS_cell_data
 The scripts in this repository are located in main `PRS_cell_data` directory. Here's a brief description of what each of the scripts does, the required inputs, and where they were grabbed from.
 
 ## 01_celldata_qc.r
-The first step is to clean-up the cell-line data. This script grabs the raw data that was downloaded (`ENCFF509XPS.tsv` and `ENCFF735RWY.tsv`) and cleans it up. We use the strand files for each of the genome builds, taken from https://www.well.ox.ac.uk/~wrayner/strand/ for `Human1M-Duov3_B` on the Illumina strand. A technical note about the Illumina strand and how A/B are mapped is (here)[https://www.illumina.com/documents/products/technotes/technote_topbot.pdf]. Note that the Table is misleading - the text is correct (re: ordering of A/B). Using the information in the strand file, we create `.ped` and `.map` files (the human readable original plink format), and then convert to binary plink files using plink. As the Illumina strand allocation of A/B is invariant to genome build, it's straightforward to generate plink files for each build. We need to then apply reverse complements to align to the forward strand under each build to match to the reference.
+The first step is to clean-up the cell-line data. This script grabs the raw data that was downloaded (`ENCFF509XPS.tsv` and `ENCFF735RWY.tsv`) and cleans it up. We use the strand files for each of the genome builds, taken from https://www.well.ox.ac.uk/~wrayner/strand/ for `Human1M-Duov3_B` on the Illumina strand. A technical note about the Illumina strand and how A/B are mapped is [here](https://www.illumina.com/documents/products/technotes/technote_topbot.pdf). Note that the first table is misleading - the text is correct (re: ordering of A/B). Using the information in the strand file, we create `.ped` and `.map` files (the human readable original plink format), and then convert to binary plink files using plink. As the Illumina strand allocation of A/B is invariant to genome build, it's straightforward to generate plink files for each build. We need to then apply reverse complements to align to the forward strand under each build to match to the reference.
 
 We then follow (loosely) the Ricopili suggestions for pre-imputation QC.
 * SNP QC: call rate ≥ 0.95
@@ -45,9 +45,9 @@ The resultant plink files are then munged a little more to get them ready to pas
 
 ## 02_cell_line_imputation_preparation.sh
 
-For this portion, we make use of some great tools from (Will Rayner)[https://www.well.ox.ac.uk/~wrayner/tools/]. For these, we first need dbSNP submitted sites for TOPMED (e.g. https://bravo.sph.umich.edu/freeze5/hg38/). On the cluster, these have been downloaded to `data/TOPMed_variants/bravo-dbsnp-all.GRCh37.vcf.gz` and `data/TOPMed_variants/bravo-dbsnp-all.GRCh38.vcf.gz`. Note, this first step isn't required for HRC. To check allele frequency differences (and the possibility of allele flips), we evaluate the frequency of variant sites using plink. This (`.freq` file), together with the `.bim` is passed to `HRC-1000G-check-bim.pl` to perform the relevant checks. The perl script (`HRC-1000G-check-bim.pl`) provides a series of plink commands in a single shell script (`Run-plink.sh`). Finally, we block gzip (`bgzip`) the output chromosome specific `.vcf` files. The data is now ready for imputation!
+For this portion, we make use of some great tools from [Will Rayner](https://www.well.ox.ac.uk/~wrayner/tools/). For these, we first need dbSNP submitted sites for TOPMED (e.g. https://bravo.sph.umich.edu/freeze5/hg38/). On the cluster, these have been downloaded to `data/TOPMed_variants/bravo-dbsnp-all.GRCh37.vcf.gz` and `data/TOPMed_variants/bravo-dbsnp-all.GRCh38.vcf.gz`. Note, this first step isn't required for HRC. To check allele frequency differences (and the possibility of allele flips), we evaluate the frequency of variant sites using plink. This (`.freq` file), together with the `.bim` is passed to `HRC-1000G-check-bim.pl` to perform the relevant checks. The perl script (`HRC-1000G-check-bim.pl`) provides a series of plink commands in a single shell script (`Run-plink.sh`). Finally, we block gzip (`bgzip`) the output chromosome specific `.vcf` files. The data is now ready for imputation!
 
-I ran imputation on both the Michigan imputation server (against the HRC reference panel), and the TOPMED imputation server. In each case, I used the web-based GUI, but it's worth noting that there is software that lets you do this via the terminal which is super easy to use and very helpful if you're a power user! Everything you need to know about it is (here)[https://imputationbot.readthedocs.io/en/latest/].
+I ran imputation on both the Michigan imputation server (against the HRC reference panel), and the TOPMED imputation server. In each case, I used the web-based GUI, but it's worth noting that there is software that lets you do this via the terminal which is super easy to use and very helpful if you're a power user! Everything you need to know about it is [here](https://imputationbot.readthedocs.io/en/latest/).
 
 I downloaded the resultant imputed files to:
 
@@ -70,7 +70,7 @@ Importantly, we use the R2 > 0.3 option (the highest option) to ensure that the 
 
 ## 03_aligning_1000G_and_cell_line.sh
 
-Grab the cleaned up 1000 genomes phase 3 data. See this (overview)[https://alanaw1.github.io/post/2021/03/03/visualizing-1000-genomes-data/], and these instructions for download of against different (reference builds)[https://www.cog-genomics.org/plink/2.0/resources].
+Grab the cleaned up 1000 genomes phase 3 data. See this [overview](https://alanaw1.github.io/post/2021/03/03/visualizing-1000-genomes-data/), and these instructions for download of against different [reference builds](https://www.cog-genomics.org/plink/2.0/resources).
 
 I convert to plink (`.bed/.bim/.fam`) format, and restrict to the set of sites that were imputed with an R2 > 0.3 in the cell-line data.
 
@@ -82,7 +82,7 @@ This last step is slow, so we created a submission script to run each chromosome
 
 ## 04_grab_PGS_scorings.r
 
-Others have done tons of work to organise and curate PGS/PRS. It turns out there are two teams that have worked to harmonise PGS on the (PGS catalog)[] across genome builds. Code to download both sets is in `04_grab_PGS_scorings.r`. However, I found (`pgs_calc`)[https://github.com/lukfor/pgs-calc] very straightforward to use, and their curated PGS scoring files work directly with data straight off the Michigan imputation server very easily together with `pgs-calc`, so I went with those scoring files on build 37 for the remainder of the pipeline.
+Others have done tons of work to organise and curate PGS/PRS. It turns out there are two teams that have worked to harmonise PGS on the [PGS catalog](http://www.pgscatalog.org/) across genome builds. Code to download both sets is in `04_grab_PGS_scorings.r`. However, I found [`pgs_calc`](https://github.com/lukfor/pgs-calc) very straightforward to use, and their curated PGS scoring files work directly with data straight off the Michigan imputation server very easily together with `pgs-calc`, so I went with those scoring files on build 37 for the remainder of the pipeline.
 
 The all important location of freezes of PGS-catalog are:
 ```
@@ -91,7 +91,7 @@ wget https://imputationserver.sph.umich.edu/resources/pgs-catalog/pgs-catalog-20
 ```
 I then create subsets of scoring files to parallelise over when submitting jobs to the cluster.
 
-Importantly, the authors also provide software (pgs-repository-builder)[https://github.com/lukfor/pgs-repository-builder] to create your own harmonised scoring files if there are specific PGS scoring files that are not present in one of the freezes.
+Importantly, the authors also provide software [pgs-repository-builder](https://github.com/lukfor/pgs-repository-builder) to create your own harmonised scoring files if there are specific PGS scoring files that are not present in one of the freezes.
 
 ## 05_pgs_1000G_submission.sh
 
