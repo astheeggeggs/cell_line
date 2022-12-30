@@ -109,6 +109,12 @@ A simple R script to read in merge and extract a set of samples in the UK Bioban
 
 ## 08_ukb_subset_vcf_creation.sh
 
+We extract the subset of samples and variants imputed well in the cell-line data using `qctool`, and write the resultant data to a compressed `vcf` file. Given that the other samples are hard-called, we hard-call the genotypes using `qctool`.
+
+We then use plink to rename the variants to their rsids. It's likely that this step is not required as the variant id column is not used by pgs-calc.
+
+Finally, we create `vcf` files from the plink files and save the output, ready to be input into `pgc-calc`.
+
 ## 09_pgs_ukb_submission.sh
 
 Submit the creation of PGS for the UK Biobank subsample
