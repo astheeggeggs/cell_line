@@ -103,10 +103,18 @@ The software creates a set of scores across samples, as well as an `.html` repor
 
 I do the same thing for the cell lines.
 
-## ukb_geno_qc.r
+## 07_ukb_geno_qc.r
 
 A simple R script to read in merge and extract a set of samples in the UK Biobank estimated to be unrelated members of superpopulation ancestry labels. We extract 15,000 estimated to be in EUR, and as many as possible from AFR, AMR, EAS, SAS. Population labels were taken from `/well/lindgren/UKBIOBANK/dpalmer/superpopulation_assignments/superpopulation_labels.tsv`.
 
-## ukb_subset_vcf_creation.sh
+## 08_ukb_subset_vcf_creation.sh
 
-## plot_cell_line_prs.r
+## 09_pgs_ukb_submission.sh
+
+Submit the creation of PGS for the UK Biobank subsample
+
+## 10_plot_cell_line_prs.r
+
+Read in a construct a series of plots of the distribution of PGS in the 1000 genomes phase 3 dataset, the UK Biobank subsample, and the cell line data, split by superpopulation.
+
+We use the meta data `.json` files to extract the number of SNPs in each score, the doi of the paper, and the human readable description of the trait.
