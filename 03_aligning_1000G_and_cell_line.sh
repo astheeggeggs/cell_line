@@ -87,6 +87,3 @@ done
 chr="X"
 echo "chromosome ${chr}"
 bcftools filter -R ${input}_variants_bcftools.txt /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/imputed/HRC/chr${chr}.dose.vcf.gz -o /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/imputed/HRC/chr${chr}.dose.subset.vcf.gz
-
-
-
