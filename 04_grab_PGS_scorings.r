@@ -28,15 +28,13 @@ system("wget https://imputationserver.sph.umich.edu/resources/pgs-catalog/pgs-ca
 
 # Create a set of files to run the PGS on, split into 20 separate jobs
 # List the set of scoring files on B37
-score_files <- dir("/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_files/scores", full.names=FALSE)
+score_files <- dir("/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_files/pgs-catalog-20221123-hg19/scores", full.names=FALSE)
 # List the set of scoring files of B37 and B38
 dt_B37 <- data.table(scores=score_files) %>% filter(grepl("txt.gz", scores))
 dt_B37 <- dt_B37 %>% mutate(job = ceiling(seq(1,nrow(dt_B37))/100))
 
-system("mkdir /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_files/B37_jobs")
-
 for (j in unique(dt_B37$job)) {
 	fwrite(dt_B37 %>% filter(job == j) %>% select(scores),
-		file=paste0("/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_files/scores/job_", j, ".txt"),
+		file=paste0("/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_files/pgs-catalog-20221123-hg19/scores/job_", j, ".txt"),
 		quote=FALSE)
 }
