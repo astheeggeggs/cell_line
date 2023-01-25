@@ -3,9 +3,9 @@
 #SBATCH -A lindgren.prj 
 #SBATCH -o output.out 
 #SBATCH -e error.err 
-#SBATCH -c 4 
+#SBATCH -c 4
 #SBATCH -p short
-#SBATCH --array 1-33:1 
+#SBATCH --array 28-32:1 
 #SBATCH --requeue
 
 export PATH="/well/lindgren/dpalmer/:$PATH"
