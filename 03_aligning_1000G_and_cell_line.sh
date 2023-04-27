@@ -67,7 +67,10 @@ for chr in {1..22}; do
 done
 
 chr="X"
+echo "23 ${chr}" >> chr_name_conv.txt
 bgzip -f ${input}_chr${chr}.vcf
+bcftools annotate --rename-chrs chr_name_conv.txt ${input}_chr${chr}.vcf.gz | bgzip > test.vcf.gz
+mv test.vcf.gz ${input}_chr${chr}.vcf.gz
 bcftools index -f ${input}_chr${chr}.vcf.gz
 bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
 bcftools isec -c none -n=2 -w1 \
