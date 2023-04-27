@@ -123,7 +123,7 @@ fwrite(dt, file="/well/lindgren-ukbb/projects/ukbb-11867/dpalmer/PRS_cell_data/d
 
 pdf("/well/lindgren-ukbb/projects/ukbb-11867/dpalmer/PRS_cell_data/data/PGS_score_results/PRS_plots_boxplots_and_UKB.pdf", width=7, height=4)
 i <- 1
-for (PRS in grep("PGS", sort(intersect(names(dt_UKB), names(dt_cell_line))), value=TRUE)) {
+for (PRS in grep("PGS", sort(intersect(names(dt_ukb), names(dt_cell_line))), value=TRUE)) {
 	if ((i %% 100) == 0) print(i)
 	p <- ggplot(data=dt, aes_string(x="super_population", y=PRS, fill="source")) + 
 	# geom_violin(trim=FALSE) + 
