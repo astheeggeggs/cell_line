@@ -13,7 +13,7 @@ module load BCFtools
 
 phase3_1kg_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/1000G/B37"
 input="${phase3_1kg_path}/all_phase3_r2_0.3"
-imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/imputed/HRC"
+imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
 
 chr=${SLURM_ARRAY_TASK_ID}
 echo "chromosome ${chr}"
