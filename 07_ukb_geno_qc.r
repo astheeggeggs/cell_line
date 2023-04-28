@@ -24,6 +24,8 @@ UKB_subset <- dt_pop %>% filter(classification_strict %in% c("AFR", "EAS", "SAS"
 UKB_subset <- rbind(dt_pop %>% filter(dt_pop$sample.ID %in% EUR_samples), UKB_subset)
 
 UKB_subset_filename <- "/well/lindgren-ukbb/projects/ukbb-11867/dpalmer/PRS_cell_data/data/UKB_subset.txt"
-
 fwrite(UKB_subset %>% mutate(fam.ID=sample.ID) %>% select(sample.ID, fam.ID), sep=" ",
 	file=UKB_subset_filename, col.names=FALSE, quote=FALSE)
+
+UKB_subset_filename <- "/well/lindgren-ukbb/projects/ukbb-11867/dpalmer/PRS_cell_data/data/UKB_subset_one_col.txt"
+fwrite(UKB_subset %>% select(sample.ID), sep=" ", file=UKB_subset_filename, col.names=FALSE, quote=FALSE)

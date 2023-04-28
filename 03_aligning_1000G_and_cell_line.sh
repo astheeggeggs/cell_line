@@ -1,7 +1,7 @@
 # Instructions
 
 export PATH="/well/lindgren/dpalmer/:$PATH"
-imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/imputed/HRC"
+imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
 phase3_1kg_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/1000G/B37"
 module purge
 module load BCFtools
@@ -22,7 +22,6 @@ plink2 --zst-decompress all_phase3.pvar.zst > all_phase3.pvar
 plink2 --make-bed --pfile all_phase3 --max-alleles 2 --out all_phase3
 rm all_phase3.pgen
 rm all_phase3.pvar
-cd ..
 
 # Determine the intersection of the 1000G files with the cell line files for variants with R2 > 0.3
 # To merge with plink, get chr:pos:ref:alt for the bim file
@@ -56,24 +55,24 @@ chr="X"
 plink --bfile ${input} --real-ref-alleles --recode vcf --chr ${chr} --out ${input}_chr${chr}
 plink --bfile ${input} --real-ref-alleles --chr ${chr} --out ${input}_chr${chr} --make-bed
 
-for chr in {1..22}; do
-	echo "chromosome ${chr}"
-	bgzip -f ${input}_chr${chr}.vcf
-	bcftools index -f ${input}_chr${chr}.vcf.gz
-	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
-	bcftools isec -c none -n=2 -w1 \
-	-O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
-	${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
-done
+# for chr in {1..22}; do
+# 	echo "chromosome ${chr}"
+# 	bgzip -f ${input}_chr${chr}.vcf
+# 	bcftools index -f ${input}_chr${chr}.vcf.gz
+# 	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+# 	bcftools isec -c none -n=2 -w1 \
+# 	-O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
+# 	${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
+# done
 
-chr="X"
-echo "23 ${chr}" >> chr_name_conv.txt
-bgzip -f ${input}_chr${chr}.vcf
-bcftools annotate --rename-chrs chr_name_conv.txt ${input}_chr${chr}.vcf.gz | bgzip > test.vcf.gz
-mv test.vcf.gz ${input}_chr${chr}.vcf.gz
-bcftools index -f ${input}_chr${chr}.vcf.gz
-bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
-bcftools isec -c none -n=2 -w1 \
--O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
-${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
+# chr="X"
+# echo "23 ${chr}" >> chr_name_conv.txt
+# bgzip -f ${input}_chr${chr}.vcf
+# bcftools annotate --rename-chrs chr_name_conv.txt ${input}_chr${chr}.vcf.gz | bgzip > test.vcf.gz
+# mv test.vcf.gz ${input}_chr${chr}.vcf.gz
+# bcftools index -f ${input}_chr${chr}.vcf.gz
+# bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+# bcftools isec -c none -n=2 -w1 \
+# -O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
+# ${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
 
