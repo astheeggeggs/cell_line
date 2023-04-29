@@ -30,7 +30,7 @@ module purge
 module load BCFtools
 
 # Extract the variant ID from vcf files to restrict the plink file
-bcftools query -f '%CHROM:%POS\_%REF\_%ALT{0}\n' ${imputed_path}/chr${chr_dose}.dose.vcf.gz > ${imputed_path}/tmp
+bcftools query -f '%CHROM:%POS\_%REF\_%ALT{0}\n' ${imputed_path}/chr${chr_dose}.dose.vcf.gz > ${imputed_path}/tmp_${chr}
 module purge
 module load OpenBLAS/0.3.12-GCC-10.2.0 
 
@@ -38,9 +38,11 @@ module load OpenBLAS/0.3.12-GCC-10.2.0
 /well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
 -g /well/lindgren-ukbb/projects/ukbb-11867/DATA/IMPUTATION/ukb_imp_chr${chr}_v3.bgen \
 -s ${sample_file} \
--incl-snpids ${imputed_path}/tmp \
+-incl-snpids ${imputed_path}/tmp_${chr} \
 -incl-samples /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_subset_one_col.txt \
 -og ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}.vcf.gz
+
+rm ${imputed_path}/tmp_${chr}
 
 # Force hard-calls
 /well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
