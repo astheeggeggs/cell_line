@@ -76,12 +76,12 @@ plink \
 --bfile ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing \
 --exclude ${ukb_imputed_subset_dir}/unphased_variants.tsv \
 --real-ref-alleles --make-bed \
---out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-test
+--out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased
 
 # Merge the imputed data with the genotype (array) data
 plink \
 --bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode \
---bmerge ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing \
+--bmerge ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased \
 --real-ref-alleles --make-bed \
 --out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed
 
