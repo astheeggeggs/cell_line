@@ -59,10 +59,10 @@ plink \
 --make-bed --fill-missing-a2 --real-ref-alleles \
 --out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing
 
-# Remove the variants that are not phased, and the two strange chromosome 9 variants.
-awk '{ if ($NF == 0) { print $4":"$5":"$6":"$7} }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt > ${ukb_imputed_subset_dir}/unphased_variants.tsv
-# Add the two chromosome 9 variants
-echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/unphased_variants.tsv
+# # Remove the variants that are not phased, and the two strange chromosome 9 variants.
+# awk '{ if ($NF == 0) { print $4":"$5":"$6":"$7} }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt > ${ukb_imputed_subset_dir}/unphased_variants.tsv
+# # Add the two chromosome 9 variants
+# echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/unphased_variants.tsv
 
 # Recode the bim files to be in the right format
 awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
