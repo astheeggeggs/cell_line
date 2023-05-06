@@ -126,6 +126,9 @@ module load OpenBLAS/0.3.12-GCC-10.2.0
 # # Finally, we need to intersect the UK Biobank VCFs and the cell-lines VCFs
 # # These are then passed for PGS scoring.
 
+module purge
+module load BCFtools
+
 imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
 
 if [ $chr -eq 23 ]; then
