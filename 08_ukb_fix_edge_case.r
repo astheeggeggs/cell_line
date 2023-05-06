@@ -4,7 +4,7 @@ library(dplyr)
 # Edge case! Some of the unphased variants would have had their alleles flipped
 # by the HRC perl script - find those and add them to the list.
 
-ukb_imputed_subset_dir="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_imputed_subset"
+ukb_imputed_subset_dir <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_imputed_subset"
 fread(paste0(ukb_imputed_subset_dir, "/array_variants.tsv"))
 dt_array <- fread(paste0(ukb_imputed_subset_dir, "/array_variants.tsv"), header=FALSE, sep=":")
 names(dt_array) <- c("chr", "pos", "ref_old", "alt_old")
@@ -18,6 +18,7 @@ for (chr in seq(1,23)) {
 	setkeyv(dt_ukb_subset_array, c("chr", "pos"))
 	dt_before <- merge(dt_ukb_subset_array, dt_array) %>% mutate(varid_old=paste(chr, pos, ref_old, alt_old, sep=":"))
 	to_add <- c(to_add, (dt_before %>% filter(varid_old!=varid_new))$varid_new)
+	print(to_add)
 }
 
 dt_unphased <- fread(paste0(ukb_imputed_subset_dir, "/array_variants.tsv"), header=FALSE)
