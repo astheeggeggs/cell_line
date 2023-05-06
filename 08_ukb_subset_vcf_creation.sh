@@ -70,60 +70,83 @@ module load OpenBLAS/0.3.12-GCC-10.2.0
 
 # Rscript 08_ukb_fix_edge_case.r
 
-# Recode the bim files to be in the right format
-awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
-${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.bim \
-> ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.tmp
+# # Recode the bim files to be in the right format
+# awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
+# ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.bim \
+# > ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.tmp
 
-mv ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.tmp \
-${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.bim
+# mv ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.tmp \
+# ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing.bim
 
-plink \
---bfile ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing \
---exclude ${ukb_imputed_subset_dir}/unphased_and_fixed_variants.tsv \
---real-ref-alleles --make-bed \
---out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased
+# plink \
+# --bfile ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing \
+# --exclude ${ukb_imputed_subset_dir}/unphased_and_fixed_variants.tsv \
+# --real-ref-alleles --make-bed \
+# --out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased
 
-# Merge the imputed data with the genotype (array) data
-plink \
---bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode \
---bmerge ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased \
---real-ref-alleles --make-bed \
---out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed
+# # Merge the imputed data with the genotype (array) data
+# plink \
+# --bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode \
+# --bmerge ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing-no-unphased \
+# --real-ref-alleles --make-bed \
+# --out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed
 
-# Remove missing data
-plink \
---bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed \
---fill-missing-a2 --real-ref-alleles --make-bed \
---out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed
+# # Remove missing data
+# plink \
+# --bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed \
+# --fill-missing-a2 --real-ref-alleles --make-bed \
+# --out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed
 
-if [ $chr_plink -eq 23 ]; then
-	# Recode the bim files to be in the right format
-	awk -v OFS='\t' '{print "X","X:"$4":"$6":"$5,$3,$4,$5,$6}' \
-	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim \
-	> ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp
+# if [ $chr_plink -eq 23 ]; then
+# 	# Recode the bim files to be in the right format
+# 	awk -v OFS='\t' '{print "X","X:"$4":"$6":"$5,$3,$4,$5,$6}' \
+# 	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim \
+# 	> ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp
+# else
+# 	# Recode the bim files to be in the right format
+# 	awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
+# 	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim \
+# 	> ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp
+# fi
+
+# mv ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp \
+# ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim
+
+# # Then recode to vcf
+# plink \
+# --double-id \
+# --bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed \
+# --real-ref-alleles --recode vcf bgz \
+# --out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final
+
+# # These are a lot smaller but there will still be a lot of differences between the
+# # variants in each of the VCFs. There will be a subset of variants present in the 
+# # UKB data because they are present in the array data for UK-Biobank, but not present in the cell-line data
+
+# # Finally, we need to intersect the UK Biobank VCFs and the cell-lines VCFs
+# # These are then passed for PGS scoring.
+
+imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
+
+if [ $chr -eq 23 ]; then
+	chr="X"
+	echo "23 ${chr}" >> chr_name_conv.txt
+	bcftools annotate --rename-chrs chr_name_conv.txt ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz | bgzip > test.vcf.gz
+	mv test.vcf.gz ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
+	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
+	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+	bcftools isec -c none -n=2 \
+	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z  \
+	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
+	${imputed_path}/chr${chr}.dose.vcf.gz
 else
-	# Recode the bim files to be in the right format
-	awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
-	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim \
-	> ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp
+	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final
+	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+	bcftools isec -c none -n=2 \
+	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z \
+	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final \
+	${imputed_path}/chr${chr}.dose.vcf.gz
 fi
 
-mv ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim.tmp \
-${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed.bim
-
-# Then recode to vcf
-plink \
---double-id \
---bfile ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed \
---real-ref-alleles --recode vcf bgz \
---out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final
-
-# These are a lot smaller but there will still be a lot of differences between the
-# variants in each of the VCFs. There will be a subset of variants present in the 
-# UKB data because they are present in the array data for UK-Biobank, but not present in the cell-line data
-
-# Finally, we need to intersect the UK Biobank VCFs and the cell-lines VCFs
-# These are then passed for PGS scoring.
 
 

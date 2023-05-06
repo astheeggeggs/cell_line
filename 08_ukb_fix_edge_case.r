@@ -15,6 +15,7 @@ for (chr in seq(1,23)) {
 	setkeyv(dt_array, c("chr", "pos"))
 	dt_ukb_subset_array <- fread(paste0(ukb_imputed_subset_dir, "/UKB_subset_combined-updated-chr", chr, "-no-missing.bim"))
 	names(dt_ukb_subset_array)[c(1,2,4,5,6)] <- c("chr", "varid_new", "pos", "alt_new", "ref_new")
+	dt_ukb_subset_array <- dt_ukb_subset_array %>% mutate(varid_new = paste(chr, pos, ref_new, alt_new, sep=":"))
 	setkeyv(dt_ukb_subset_array, c("chr", "pos"))
 	dt_before <- merge(dt_ukb_subset_array, dt_array) %>% mutate(varid_old=paste(chr, pos, ref_old, alt_old, sep=":"))
 	to_add <- c(to_add, (dt_before %>% filter(varid_old!=varid_new))$varid_new)
