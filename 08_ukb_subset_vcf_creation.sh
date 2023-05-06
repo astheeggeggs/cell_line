@@ -30,45 +30,45 @@ bcftools query -f '%CHROM:%POS\_%REF\_%ALT{0}\n' ${imputed_path}/chr${chr_dose}.
 module purge
 module load OpenBLAS/0.3.12-GCC-10.2.0 
 
-# Filter to subset of UK Biobank using qctool
-/well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
--g /well/lindgren-ukbb/projects/ukbb-11867/DATA/IMPUTATION/ukb_imp_chr${chr}_v3.bgen \
--s ${sample_file} \
--incl-snpids ${imputed_path}/tmp_${chr} \
--incl-samples /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_subset_one_col.txt \
--og ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}.vcf.gz
+# # Filter to subset of UK Biobank using qctool
+# /well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
+# -g /well/lindgren-ukbb/projects/ukbb-11867/DATA/IMPUTATION/ukb_imp_chr${chr}_v3.bgen \
+# -s ${sample_file} \
+# -incl-snpids ${imputed_path}/tmp_${chr} \
+# -incl-samples /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_subset_one_col.txt \
+# -og ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}.vcf.gz
 
-rm ${imputed_path}/tmp_${chr}
+# rm ${imputed_path}/tmp_${chr}
 
-# Force hard-calls
-/well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
--g ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}.vcf.gz \
--threshold 0.5001 \
--og ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_05.vcf.gz
+# # Force hard-calls
+# /well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
+# -g ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}.vcf.gz \
+# -threshold 0.5001 \
+# -og ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_05.vcf.gz
 
-# Convert to plink, and fill in missing calls
-plink \
---vcf ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_05.vcf.gz \
---real-ref-alleles --fill-missing-a2 --make-bed \
---out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode
+# # Convert to plink, and fill in missing calls
+# plink \
+# --vcf ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_05.vcf.gz \
+# --real-ref-alleles --fill-missing-a2 --make-bed \
+# --out ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode
 
-# Fill in missing calls in the 'UKB_subset_combined' - need to create this for the X
-# (these are the genotyped files that are not present in the UKB imputed data)
-plink \
---bfile /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/combined/UKB_subset_combined-updated-chr${chr_plink} \
---make-bed --fill-missing-a2 --real-ref-alleles \
---out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing
+# # Fill in missing calls in the 'UKB_subset_combined' - need to create this for the X
+# # (these are the genotyped files that are not present in the UKB imputed data)
+# plink \
+# --bfile /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/combined/UKB_subset_combined-updated-chr${chr_plink} \
+# --make-bed --fill-missing-a2 --real-ref-alleles \
+# --out ${ukb_imputed_subset_dir}/UKB_subset_combined-updated-chr${chr}-no-missing
 
-if [ ! -f $unphased ]; then
-	# Remove the variants that are not phased, and the three strange chromosome 9 variants.
-	awk '{ if ($NF == 0) { print $4":"$5":"$6":"$7} }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt > ${ukb_imputed_subset_dir}/unphased_variants.tsv
-	awk '{ print $4":"$5":"$6":"$7 }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt | tail -n +2 > ${ukb_imputed_subset_dir}/array_variants.tsv
-	# Add the three chromosome 9 variants
-	echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/unphased_variants.tsv
-	echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/array_variants.tsv
-fi
+# if [ ! -f $unphased ]; then
+# 	# Remove the variants that are not phased, and the three strange chromosome 9 variants.
+# 	awk '{ if ($NF == 0) { print $4":"$5":"$6":"$7} }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt > ${ukb_imputed_subset_dir}/unphased_variants.tsv
+# 	awk '{ print $4":"$5":"$6":"$7 }' /well/lindgren-ukbb/projects/ukbb-11867/DATA/QC/ukb_snp_qc.txt | tail -n +2 > ${ukb_imputed_subset_dir}/array_variants.tsv
+# 	# Add the three chromosome 9 variants
+# 	echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/unphased_variants.tsv
+# 	echo -e "9:139888121:C:T\n9:140086963:G:A\n9:140225101:C:T\n" >> ${ukb_imputed_subset_dir}/array_variants.tsv
+# fi
 
-Rscript 08_ukb_fix_edge_case.r
+# Rscript 08_ukb_fix_edge_case.r
 
 # Recode the bim files to be in the right format
 awk -v OFS='\t' '{print $1,$1":"$4":"$6":"$5,$3,$4,$5,$6}' \
