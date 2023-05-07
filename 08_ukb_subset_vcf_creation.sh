@@ -22,13 +22,13 @@ if [ $chr_plink -eq 23 ]; then
 	sample_file="/well/lindgren-ukbb/projects/ukbb-11867/DATA/SAMPLE_FAM/ukb11867_imp_chrX_v3_s486743.sample"
 fi
 
-module purge
-module load BCFtools
+# module purge
+# module load BCFtools
 
-# Extract the variant ID from vcf files to restrict the plink file
-bcftools query -f '%CHROM:%POS\_%REF\_%ALT{0}\n' ${imputed_path}/chr${chr_dose}.dose.vcf.gz > ${imputed_path}/tmp_${chr}
-module purge
-module load OpenBLAS/0.3.12-GCC-10.2.0 
+# # Extract the variant ID from vcf files to restrict the plink file
+# bcftools query -f '%CHROM:%POS\_%REF\_%ALT{0}\n' ${imputed_path}/chr${chr_dose}.dose.vcf.gz > ${imputed_path}/tmp_${chr}
+# module purge
+# module load OpenBLAS/0.3.12-GCC-10.2.0 
 
 # # Filter to subset of UK Biobank using qctool
 # /well/lindgren/dpalmer/qctool2/qctool/build/release/apps/qctool_v2.2.0 \
@@ -126,30 +126,42 @@ module load OpenBLAS/0.3.12-GCC-10.2.0
 # # Finally, we need to intersect the UK Biobank VCFs and the cell-lines VCFs
 # # These are then passed for PGS scoring.
 
-module purge
-module load BCFtools
+# module purge
+# module load BCFtools
 
-imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
+# imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
 
-if [ $chr -eq 23 ]; then
-	chr="X"
-	echo "23 ${chr}" >> chr_name_conv.txt
-	bcftools annotate --rename-chrs chr_name_conv.txt ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz | bgzip > test.vcf.gz
-	mv test.vcf.gz ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
-	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
-	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
-	bcftools isec -c none -n=2 \
-	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z  \
-	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
-	${imputed_path}/chr${chr}.dose.vcf.gz
-else
-	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
-	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
-	bcftools isec -c none -n=2 \
-	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z \
-	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
-	${imputed_path}/chr${chr}.dose.vcf.gz
-fi
+# if [ $chr_plink -eq 23 ]; then
+# 	chr="X"
+# 	echo "23 ${chr}" >> chr_name_conv.txt
+# 	bcftools annotate --rename-chrs chr_name_conv.txt ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz | bgzip > test.vcf.gz
+# 	mv test.vcf.gz ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
+# 	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
+# 	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+# 	bcftools isec -c none -n=2 \
+# 	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z  \
+# 	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
+# 	${imputed_path}/chr${chr}.dose.vcf.gz
+# else
+# 	bcftools index -f ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz
+# 	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
+# 	bcftools isec -c none -n=2 \
+# 	-p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z \
+# 	${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
+# 	${imputed_path}/chr${chr}.dose.vcf.gz
+# fi
 
+mkdir -p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection
+# Move the vcfs
+mv ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr}/0000.vcf.gz  \
+${ukb_imputed_subset_dir}/UKB_cell_line_intersection/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final_intersected.vcf.gz
+mv $${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr}/0001.vcf.gz \
+${imputed_path}/chr${chr}_UKB_intersected.dose.vcf.gz
+
+# Move the index files
+mv ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr}/0000.vcf.gz.tbi  \
+${ukb_imputed_subset_dir}/UKB_cell_line_intersection/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final_intersected.vcf.gz.tbi
+mv $${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr}/0001.vcf.gz.tbi \
+${imputed_path}/chr${chr}_UKB_intersected.dose.vcf.gz.tbi
 
 
