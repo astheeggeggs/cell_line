@@ -15,11 +15,11 @@ ukb_imputed_intersected_subset_dir="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_da
 mkdir -p ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}
 
 pgs-calc apply \
-	--ref ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores/job_${job}.txt \
+	--ref ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores/job_${SLURM_ARRAY_TASK_ID}.txt \
 	${ukb_imputed_intersected_subset_dir}/UKB_imputed_subset_chr*_thresholded_recode_merge_typed_final_intersected.vcf.gz \
-	--out ${pgs_results_dir}/ukb_job_${job}/ukb_job_${job}_scores.txt \
+	--out ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores.txt \
 	--dbsnp /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/dbsnp154_hg19.txt.gz \
-	--report-html ${pgs_results_dir}/ukb_job_${job}/ukb_job_${job}_scores_report.html \
+	--report-html ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_report.html \
 	--genotypes GT \
 	--meta ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores.meta.json \
-	--report-csv ${pgs_results_dir}/ukb_job_${job}/ukb_job_${job}_scores_report.csv
+	--report-csv ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv
