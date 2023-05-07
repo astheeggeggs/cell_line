@@ -22,7 +22,7 @@ if [ $chr -eq 23 ]; then
 fi
 
 bcftools isec -c none -n=3 \
--p ${ukb_imputed_subset_dir}/UKB_cell_line_intersection_chr${chr} -O z \
+-p ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr} -O z \
 ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
 ${phase3_1kg_path}/all_phase3_r2_0.3_chr${chr}.vcf.gz \
 ${imputed_path}/chr${chr}.dose.vcf.gz
