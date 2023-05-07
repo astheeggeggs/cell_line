@@ -21,19 +21,19 @@ echo "chromosome ${chr}"
 if [ $chr -eq 23 ]; then
 	chr="X"
 	echo "23 ${chr}" >> chr_name_conv.txt
-	bgzip -f ${input}_chr${chr}.vcf
+	# bgzip -f ${input}_chr${chr}.vcf
 	bcftools annotate --rename-chrs chr_name_conv.txt ${input}_chr${chr}.vcf.gz | bgzip > test.vcf.gz
 	mv test.vcf.gz ${input}_chr${chr}.vcf.gz
 	bcftools index -f ${input}_chr${chr}.vcf.gz
 	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
 	bcftools isec -c none -n=2 -w1 \
 	-O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
-	${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
+	${imputed_path}/chr${chr}.dose.vcf.gz ${input}_chr${chr}.vcf.gz 
 else
-	bgzip -f ${input}_chr${chr}.vcf
+	# bgzip -f ${input}_chr${chr}.vcf
 	bcftools index -f ${input}_chr${chr}.vcf.gz
 	bcftools index -f ${imputed_path}/chr${chr}.dose.vcf.gz
 	bcftools isec -c none -n=2 -w1 \
 	-O z -o ${imputed_path}/chr${chr}.dose.subset.vcf.gz \
-	${input}_chr${chr}.vcf.gz ${imputed_path}/chr${chr}.dose.vcf.gz
+	${imputed_path}/chr${chr}.dose.vcf.gz ${input}_chr${chr}.vcf.gz
 fi
