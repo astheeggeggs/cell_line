@@ -17,9 +17,9 @@ ukb_imputed_subset_dir="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_
 
 chr=${SLURM_ARRAY_TASK_ID}
 
-# if [ $chr -eq 23 ]; then
-# 	chr="X"
-# fi
+if [ $chr -eq 23 ]; then
+	chr="X"
+fi
 
 # bcftools isec -c none -n=3 \
 # -p ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr} -O z \
