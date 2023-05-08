@@ -8,24 +8,24 @@
 #SBATCH --array 1-23:1 
 #SBATCH --requeue
 
-# module purge
-# module load BCFtools
+module purge
+module load BCFtools
 
-# imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
-# phase3_1kg_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/1000G/B37"
-# ukb_imputed_subset_dir="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_imputed_subset"
+imputed_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/celldataB37/HRC/imputed"
+phase3_1kg_path="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/1000G/B37"
+ukb_imputed_subset_dir="/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/UKB_imputed_subset"
 
-# chr=${SLURM_ARRAY_TASK_ID}
+chr=${SLURM_ARRAY_TASK_ID}
 
-# if [ $chr -eq 23 ]; then
-# 	chr="X"
-# fi
+if [ $chr -eq 23 ]; then
+	chr="X"
+fi
 
-# bcftools isec -c none -n=3 \
-# -p ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr} -O z \
-# ${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
-# ${phase3_1kg_path}/all_phase3_r2_0.3_chr${chr}.vcf.gz \
-# ${imputed_path}/chr${chr}.dose.vcf.gz
+bcftools isec -c none -n=3 \
+-p ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr} -O z \
+${ukb_imputed_subset_dir}/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final.vcf.gz \
+${phase3_1kg_path}/all_phase3_r2_0.3_chr${chr}.vcf.gz \
+${imputed_path}/chr${chr}.dose.vcf.gz
 
 mkdir -p ${ukb_imputed_subset_dir}/UKB_cell_line_1000G_intersection
 # Move the vcfs
