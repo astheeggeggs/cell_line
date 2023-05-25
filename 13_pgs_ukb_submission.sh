@@ -1,11 +1,11 @@
 #!/bin/bash 
 #SBATCH -J ukb-prs
 #SBATCH -A lindgren.prj 
-#SBATCH -o output.out 
-#SBATCH -e error.err 
+#SBATCH -o output.%j.out 
+#SBATCH -e error.%j.err 
 #SBATCH -c 4 
 #SBATCH -p long
-#SBATCH --array 1-33:1 
+#SBATCH --array 4-4:1 
 #SBATCH --requeue
 
 export PATH="/well/lindgren/dpalmer/:$PATH"

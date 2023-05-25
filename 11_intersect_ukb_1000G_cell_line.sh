@@ -28,11 +28,12 @@ fi
 # ${imputed_path}/chr${chr}.dose.vcf.gz
 
 mkdir -p ${ukb_imputed_subset_dir}/UKB_cell_line_1000G_intersection
+mkdir -p ${phase3_1kg_path}/UKB_cell_line_1000G_intersection
 # Move the vcfs
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0000.vcf.gz \
 ${ukb_imputed_subset_dir}/UKB_cell_line_1000G_intersection/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final_UKB_cell_line_1000G_intersected.vcf.gz
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0001.vcf.gz \
-${phase3_1kg_path}/all_phase3_r2_0.3_chr${chr}_UKB_cell_line_1000G_intersected.vcf.gz
+${phase3_1kg_path}/UKB_cell_line_1000G_intersection/all_phase3_r2_0.3_chr${chr}_UKB_cell_line_1000G_intersected.vcf.gz
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0002.vcf.gz \
 ${imputed_path}/chr${chr}_UKB_cell_line_1000G_intersected.dose.vcf.gz
 
@@ -40,6 +41,6 @@ ${imputed_path}/chr${chr}_UKB_cell_line_1000G_intersected.dose.vcf.gz
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0000.vcf.gz.tbi \
 ${ukb_imputed_subset_dir}/UKB_cell_line_1000G_intersection/UKB_imputed_subset_chr${chr}_thresholded_recode_merge_typed_final_UKB_cell_line_1000G_intersected.vcf.gz.tbi
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0001.vcf.gz.tbi \
-${phase3_1kg_path}/all_phase3_r2_0.3_chr${chr}_UKB_cell_line_1000G_intersected.vcf.gz.tbi
+${phase3_1kg_path}/UKB_cell_line_1000G_intersection/all_phase3_r2_0.3_chr${chr}_UKB_cell_line_1000G_intersected.vcf.gz.tbi
 mv ${ukb_imputed_subset_dir}/UKB_1000G_cell_line_intersection_chr${chr}/0002.vcf.gz.tbi \
 ${imputed_path}/chr${chr}_UKB_cell_line_1000G_intersected.dose.vcf.gz.tbi
