@@ -16,7 +16,7 @@ mkdir ${pgs_results_dir}/job_${SLURM_ARRAY_TASK_ID}
 
 pgs-calc apply \
 	--ref ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores/job_${SLURM_ARRAY_TASK_ID}.txt \
-	${phase3_1kg_path}/all_phase3_r2_0.3_chr*_UKB_cell_line_1000G_intersected.vcf.gz \
+	${phase3_1kg_path}/UKB_cell_line_1000G_intersection/all_phase3_r2_0.3_chr*_UKB_cell_line_1000G_intersected.vcf.gz \
 	--out ${pgs_results_dir}/job_${SLURM_ARRAY_TASK_ID}/1000G_intersect_ukb_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores.txt \
 	--dbsnp /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/dbsnp154_hg19.txt.gz \
 	--report-html ${pgs_results_dir}/job_${SLURM_ARRAY_TASK_ID}/1000G_intersect_ukb_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores_report.html \
