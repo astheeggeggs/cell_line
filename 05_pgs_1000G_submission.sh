@@ -1,8 +1,8 @@
 #!/bin/bash 
 #SBATCH -J 1000G-prs
 #SBATCH -A lindgren.prj 
-#SBATCH -o output.out 
-#SBATCH -e error.err 
+#SBATCH -o output.%A_%a.out 
+#SBATCH -e error.%A_%a.err 
 #SBATCH -c 4 
 #SBATCH -p short
 #SBATCH --array 1-33:1 
