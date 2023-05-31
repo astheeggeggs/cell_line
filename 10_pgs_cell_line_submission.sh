@@ -1,8 +1,8 @@
 #!/bin/bash 
 #SBATCH -J cell-line-prs
 #SBATCH -A lindgren.prj 
-#SBATCH -o output.out 
-#SBATCH -e error.err 
+#SBATCH -o cell_line.ukb.int.prs.output.%A_%a.out 
+#SBATCH -e cell_line.ukb.int.prs.error.%A_%a.err 
 #SBATCH -c 4 
 #SBATCH -p short
 #SBATCH --array 1-33:1 
@@ -22,4 +22,5 @@ pgs-calc apply \
 	--report-html ${pgs_results_dir}/cell_line_job_${SLURM_ARRAY_TASK_ID}/cell_line_intersect_UKB_job_${SLURM_ARRAY_TASK_ID}_scores_report.html \
 	--genotypes GT \
 	--meta ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores.meta.json \
-	--report-csv ${pgs_results_dir}/cell_line_job_${SLURM_ARRAY_TASK_ID}/cell_line_intersect_UKB_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv
+	--report-csv ${pgs_results_dir}/cell_line_job_${SLURM_ARRAY_TASK_ID}/cell_line_intersect_UKB_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv \
+	--write-variants ${pgs_results_dir}/cell_line_job_${SLURM_ARRAY_TASK_ID}/cell_line_intersect_UKB_job_${SLURM_ARRAY_TASK_ID}_scores_variants_used.csv

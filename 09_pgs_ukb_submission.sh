@@ -1,8 +1,8 @@
 #!/bin/bash 
 #SBATCH -J ukb-prs
 #SBATCH -A lindgren.prj 
-#SBATCH -o output.out 
-#SBATCH -e error.err 
+#SBATCH -o ukb.prs.output.%A_%a.out
+#SBATCH -e ukb.prs.error.%A_%a.err 
 #SBATCH -c 4 
 #SBATCH -p long
 #SBATCH --array 1-33:1 
@@ -22,4 +22,5 @@ pgs-calc apply \
 	--report-html ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_report.html \
 	--genotypes GT \
 	--meta ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores.meta.json \
-	--report-csv ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv
+	--report-csv ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv \
+	--write-variants ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/ukb_job_${SLURM_ARRAY_TASK_ID}_scores_variants_used.csv
