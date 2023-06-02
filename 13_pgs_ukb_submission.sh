@@ -23,4 +23,6 @@ pgs-calc apply \
 	--genotypes GT \
 	--meta ${pgs_score_dir}/pgs-catalog-20221123-hg19/scores.meta.json \
 	--report-csv ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/fully_intersected/ukb_intersect_1000G_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores_report.csv \
-	--write-variants ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/fully_intersected/ukb_intersect_1000G_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores_variants_used.csv \
+	--write-variants ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/fully_intersected/ukb_intersect_1000G_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores_variants_used.csv
+
+gzip -f ${pgs_results_dir}/ukb_job_${SLURM_ARRAY_TASK_ID}/fully_intersected/ukb_intersect_1000G_cell_line_job_${SLURM_ARRAY_TASK_ID}_scores_variants_used.csv

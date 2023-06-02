@@ -179,23 +179,27 @@ cell_line_string <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_sco
 string_1000 <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/job_@/job_@_scores_report.csv"
 
 check_report_agreement(cell_line_string, string_1000)
-# In 1000G
-pgs_variant_file <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/job_31/job_31_scores_variants_used.csv"
-determine_variants_used_in_pgs(pgs_variant_file, "PGS003175")
-# In cell line
-pgs_variant_file <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/cell_line_job_31/cell_line_job_31_scores_variants_used.csv"
-determine_variants_used_in_pgs(pgs_variant_file, "PGS003175")
+# # In 1000G
+# pgs_variant_file <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/job_31/job_31_scores_variants_used.csv"
+# determine_variants_used_in_pgs(pgs_variant_file, "PGS003175")
+# # In cell line
+# pgs_variant_file <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/cell_line_job_31/cell_line_job_31_scores_variants_used.csv"
+# determine_variants_used_in_pgs(pgs_variant_file, "PGS003175")
 
 # How to check for variants in indexed vcf
 # system("bcftools view -rX:82139752-82139952 /well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/1000G/B37/all_phase3_r2_0.3_chrX.vcf.gz")
 
+system("bcftools view -rX:76136952-76136970 ${ukb_imputed_intersected_1000G_subset_dir}/UKB_imputed_subset_chr*_thresholded_recode_merge_typed_final_UKB_cell_line_1000G_intersected.vcf.gz")
+# bcftools view -rX:76136952-76136970 ${ukb_imputed_intersected_1000G_subset_dir}/UKB_imputed_subset_chr*_thresholded_recode_merge_typed_final_UKB_cell_line_1000G_intersected.vcf.gz
+
 # Fully intersected
 string_1000 <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/job_@/1000G_intersect_ukb_cell_line_job_@_scores_report.csv"
-ukb_string <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/ukb_job_@/ukb_intersect_1000G_cell_line_job_@_scores_report.csv"
+ukb_string <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/ukb_job_@/fully_intersected/ukb_intersect_1000G_cell_line_job_@_scores_report.csv"
 cell_line_string <- "/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/cell_line_job_@/cell_line_intersect_UKB_1000G_job_@_scores_report.csv" 
 
 check_report_agreement(cell_line_string, string_1000)
 check_report_agreement(cell_line_string, ukb_string)
+determine_variants_used_in_pgs("/well/lindgren/UKBIOBANK/dpalmer/PRS_cell_data/data/PGS_score_results/ukb_job_1/fully_intersected/ukb_intersect_1000G_cell_line_job_1_scores_variants_used.csv", "PGS000067")
 check_report_agreement(ukb_string, string_1000)
 
 # Now, create a series of plots
